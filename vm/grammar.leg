@@ -48,13 +48,13 @@ OptStmts  = Stmts
 
 Stmt      = While
           | Until
+          | For
           | If
           | Unless
           | Def
           | Class
           | Module
           | Expr
-          | For
 
 Expr      = Assign
           | AsgnCall
@@ -145,7 +145,7 @@ Until     = 'until' SPACE cond:Expr SEP
 
 For       = 'for' SPACE var:ID SPACE 'in' SPACE '('start:NUMBER'..'end:NUMBER')' SEP
                 body:Stmts -
-            'end'                           { $$ = NODE3(FOR, var, start, end) }
+            'end'                           { printf("regra do for\n") }
 
 If        = 'if' SPACE cond:Expr SEP        { else_body = 0 }
               body:Stmts -
