@@ -286,6 +286,9 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
       SETARG_sBx(kv_A(b->code, jmp_end - 1), kv_size(b->code) - jmp_end + 1);
       PUSH_OP_AsBx(b, JMP, 0, 0-(kv_size(b->code) - jmp_beg) - 1);
     } break;
+    case NODE_FOR: {
+      printf("definir bytecode do for..\n");
+    } break;
     case NODE_AND:
     case NODE_OR: {
       /* receiver */

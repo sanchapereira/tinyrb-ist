@@ -54,6 +54,7 @@ Stmt      = While
           | Class
           | Module
           | Expr
+          | For
 
 Expr      = Assign
           | AsgnCall
@@ -141,6 +142,10 @@ While     = 'while' SPACE cond:Expr SEP
 Until     = 'until' SPACE cond:Expr SEP
               body:Stmts -
             'end'                           { $$ = NODE2(UNTIL, cond, body) }
+
+For       = 'for' SPACE var:ID SPACE 'in' SPACE '('start:NUMBER'..'end:NUMBER')' SEP
+                body:Stmts -
+            'end'                           { $$ = NODE3(FOR, var, start, end) }
 
 If        = 'if' SPACE cond:Expr SEP        { else_body = 0 }
               body:Stmts -
