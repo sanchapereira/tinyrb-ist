@@ -145,7 +145,7 @@ Until     = 'until' SPACE cond:Expr SEP
 
 For       = 'for' SPACE var:ID SPACE 'in' SPACE '('start:NUMBER'..'end:NUMBER')' SEP
                 body:Stmts -
-            'end'                           { printf("regra do for\n") }
+            'end'                           { $$ = NODE4(FOR, var, start, end, body) }
 
 If        = 'if' SPACE cond:Expr SEP        { else_body = 0 }
               body:Stmts -

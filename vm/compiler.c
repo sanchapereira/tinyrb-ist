@@ -3,7 +3,7 @@
 #include "internal.h"
 
 /* ast node */
-OBJ TrNode_new(VM, TrNodeType type, OBJ a, OBJ b, OBJ c, size_t line) {
+OBJ TrNode_new(VM, TrNodeType type, OBJ a, OBJ b, OBJ c, OBJ d, size_t line) {
   UNUSED(vm);
   TrNode *n = TR_ALLOC(TrNode);
   n->ntype = type;
@@ -11,6 +11,7 @@ OBJ TrNode_new(VM, TrNodeType type, OBJ a, OBJ b, OBJ c, size_t line) {
   n->args[0] = a;
   n->args[1] = b;
   n->args[2] = c;
+  n->args[3] = d;
   n->line = line;
   return (OBJ)n;
 }
