@@ -1,17 +1,15 @@
-# Object files
+*.swp
+*~
 *.o
+*.lo
+*.la
+*.rbc
 
-# Libraries
-*.lib
-*.a
+vm/grammar.c
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+tinyrb
+tinyrb-*
 
-# Executables
-*.exe
-*.out
-*.app
+vendor/gc
+vendor/peg
+vendor/pcre
