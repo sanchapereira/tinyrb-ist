@@ -289,6 +289,18 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
     } break;
     case NODE_FOR: {
       printf("definir bytecode do for..\n");
+      OBJ name = n->args[0];
+      COMPILE_NODE(b, n->args[1], reg);
+      COMPILE_NODE(b, n->args[2], reg+1);
+      PUSH_OP_ABx(b, LOADK, reg+2, (reg)); //inc
+      size_t jmp_beg = kv_size(b->code);
+      PUSH_OP_ABC(b, SUB, reg+3, reg+1, reg);
+      PUSH_OP_ABx(b, JMPUNLESS, reg+3, 0);
+      size_t jmp_end = kv_size(b->code);
+      COMPILE_NODES(b, n->args[3], i, reg, 0); //body
+      PUSH_OP_ABC(b, ADD, reg, reg, reg+2 );
+      SETARG_sBx(kv_A(b->code, jmp_end - 1), kv_size(b->code) - jmp_end + 1);
+      PUSH_OP_AsBx(b, JMP, 0, 0-(kv_size(b->code) -jmp_beg) - 1);
     } break;
     case NODE_AND:
     case NODE_OR: {
