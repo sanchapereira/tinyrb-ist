@@ -125,9 +125,9 @@ Block     = 'do' SEP
             'end'                           { $$ = NODE2(BLOCK, body, params) }
           # FIXME this might hang the parser and is very slow.
           # Clash with Hash for sure.
-          #| '{' - body:OptStmts - '}'       { $$ = NODE(BLOCK, body) }
-          #| '{' - '|' params:Params '|'
-          #  - body:OptStmts - '}'           { $$ = NODE2(BLOCK, body, params) }
+          | '{' - body:OptStmts - '}'       { $$ = NODE(BLOCK, body) }
+          | '{' - '|' params:Params '|'
+            - body:OptStmts - '}'           { $$ = NODE2(BLOCK, body, params) }
 
 Assign    = name:ID - ASSIGN - val:Stmt     { $$ = NODE2(ASSIGN, name, val) }
           | name:CONST - ASSIGN - val:Stmt  { $$ = NODE2(SETCONST, name, val) }
@@ -143,9 +143,9 @@ Until     = 'until' SPACE cond:Expr SEP
               body:Stmts -
             'end'                           { $$ = NODE2(UNTIL, cond, body) }
 
-For       = 'for' SPACE var:ID SPACE 'in' SPACE '('start:Value'..'end:Value')' SEP
+For       = 'for' SPACE var:ID SPACE 'in' SPACE val:Expr SEP
                 body:Stmts -
-            'end'                           { $$ = NODE4(FOR, var, start, end, body) }
+            'end'                           { $$ = NODE3(FOR, val, var, body) }
 
 If        = 'if' SPACE cond:Expr SEP        { else_body = 0 }
               body:Stmts -
@@ -231,7 +231,7 @@ HashItems = head:Expr - '=>' - val:Expr     { head = NODES_N(2, head, val) }
                 '=>' - val:Expr             { PUSH_NODE(head, val) }
             )*                              { $$ = head }
 
-KEYWORD   = 'while' | 'until' | 'do' | 'end' |
+KEYWORD   = 'while' | 'until' | 'for' | 'do' | 'end' |
             'if' | 'unless' | 'else' |
             'true' | 'false' | 'nil' | 'self' |
             'class' | 'module' | 'def' |

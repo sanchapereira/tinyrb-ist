@@ -1,3 +1,3 @@
 for i in (1..3)
-    puts "sancha"
+    puts i
 end

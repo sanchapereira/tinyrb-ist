@@ -288,19 +288,27 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
       PUSH_OP_AsBx(b, JMP, 0, 0-(kv_size(b->code) - jmp_beg) - 1);
     } break;
     case NODE_FOR: {
-      printf("definir bytecode do for..\n");
-      OBJ name = n->args[0];
-      COMPILE_NODE(b, n->args[1], reg);
-      COMPILE_NODE(b, n->args[2], reg+1);
-      PUSH_OP_ABx(b, LOADK, reg+2, (reg)); //inc
-      size_t jmp_beg = kv_size(b->code);
-      PUSH_OP_ABC(b, SUB, reg+3, reg+1, reg);
-      PUSH_OP_ABx(b, JMPUNLESS, reg+3, 0);
-      size_t jmp_end = kv_size(b->code);
-      COMPILE_NODES(b, n->args[3], i, reg, 0); //body
-      PUSH_OP_ABC(b, ADD, reg, reg, reg+2 );
-      SETARG_sBx(kv_A(b->code, jmp_end - 1), kv_size(b->code) - jmp_end + 1);
-      PUSH_OP_AsBx(b, JMP, 0, 0-(kv_size(b->code) -jmp_beg) - 1);
+      printf(">> BYTECODE DO FOR\n");
+      OBJ name = TrSymbol_new(c->vm, "each");     
+      COMPILE_NODE(b, n->args[0], reg); // range de valores
+      int i = TrBlock_push_value(b, name); // each
+      size_t blki = 0;
+      TrBlock *blk = 0;
+      if(n->args[2]) {
+        blk = TrBlock_new(c,b);
+        TrNode *blk_node = (TrNode *)TrNode_new(c->vm, NODE_BLOCK, n->args[2], n->args[1], 0, 0, b->line);
+        blki = kv_size(b->blocks) + 1;
+        blk->argc = 1;
+        TrNode *param = (TrNode *)TrNode_new(c->vm, NODE_PARAM, n->args[1], 0, 0, 0, b->line);
+        TrBlock_push_local(blk, param->args[0]);
+        kv_push(TrBlock *, b->blocks, blk);
+        int blk_reg = kv_size(blk->locals);
+        COMPILE_NODE(blk, blk_node, blk_reg);
+        PUSH_OP_A(blk, RETURN, blk_reg); 
+      }
+      PUSH_OP_A(b, BOING, 0);
+      PUSH_OP_ABx(b, LOOKUP, reg, i); // procura "each" na lib
+      PUSH_OP_ABC(b, CALL, reg, 0, blki);
     } break;
     case NODE_AND:
     case NODE_OR: {
