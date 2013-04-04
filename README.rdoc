@@ -4,5 +4,13 @@ An extension of tinyrb:
 http://github.com/macournoyer/tinyrb
 
 
-== What is implemented in tinyrb-ist (that isn't on tinyrb)
+== what is implemented in tinyrb-ist (that isn't on tinyrb):
 * for
+
+
+== credits
+* Sancha Pereira
+* Cláudia Henriques
+* Miguel Aragão
+
+tinyrb is Copyright (c) Marc-Andre Cournoyer <macournoyer@gmail.com> and released under Ruby license
