@@ -1,16 +1,8 @@
-tinyrb-ist
-==
+= tinyrb-ist
 
-An extension of tinyrb.
-
-
-What is implemented in tinyrb-ist
-==
-For
-
-
-Credits
-=
+An extension of tinyrb:
 http://github.com/macournoyer/tinyrb
 
 
+== What is implemented in tinyrb-ist (that isn't on tinyrb)
+* for
