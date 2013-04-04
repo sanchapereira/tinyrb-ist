@@ -1,0 +1,16 @@
+tinyrb-ist
+==
+
+An extension of tinyrb.
+
+
+What is implemented in tinyrb-ist
+==
+For
+
+
+Credits
+=
+http://github.com/macournoyer/tinyrb
+
+
