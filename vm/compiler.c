@@ -288,19 +288,19 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
       PUSH_OP_AsBx(b, JMP, 0, 0-(kv_size(b->code) - jmp_beg) - 1);
     } break;
     case NODE_FOR: {
-      printf(">> BYTECODE DO FOR\n");
-      OBJ name = TrSymbol_new(c->vm, "each");     
+      /* BYTECODE DO FOR */
       COMPILE_NODE(b, n->args[0], reg); // range de valores
+	  OBJ name = TrSymbol_new(c->vm, "each");
       int i = TrBlock_push_value(b, name); // each
       size_t blki = 0;
       TrBlock *blk = 0;
-      if(n->args[2]) {
+      if(n->args[2]) { // body
         blk = TrBlock_new(c,b);
         TrNode *blk_node = (TrNode *)TrNode_new(c->vm, NODE_BLOCK, n->args[2], n->args[1], 0, 0, b->line);
         blki = kv_size(b->blocks) + 1;
         blk->argc = 1;
         TrNode *param = (TrNode *)TrNode_new(c->vm, NODE_PARAM, n->args[1], 0, 0, 0, b->line);
-        TrBlock_push_local(blk, param->args[0]);
+        TrBlock_push_local(blk, param->args[0]); // var
         kv_push(TrBlock *, b->blocks, blk);
         int blk_reg = kv_size(blk->locals);
         COMPILE_NODE(blk, blk_node, blk_reg);
