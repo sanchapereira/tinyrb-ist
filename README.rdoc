@@ -10,7 +10,7 @@ http://github.com/macournoyer/tinyrb
 
 == credits
 * Sancha Pereira
-* Cláudia Henriques
+* Cláudia Henriques, 66958
 * Miguel Aragão
 
 tinyrb is Copyright (c) Marc-Andre Cournoyer <macournoyer@gmail.com> and released under Ruby license
