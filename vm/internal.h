@@ -69,6 +69,8 @@ typedef enum {
   NODE_GETGLOBAL,
   NODE_SETGLOBAL,
   NODE_ADD,
+  NODE_INC,
+  NODE_DEC,
   NODE_SUB,
   NODE_LT,
   NODE_NEG,

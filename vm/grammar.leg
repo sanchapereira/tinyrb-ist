@@ -130,6 +130,8 @@ Block     = 'do' SEP
           #  - body:OptStmts - '}'           { $$ = NODE2(BLOCK, body, params) }
 
 Assign    = name:ID - ASSIGN - val:Stmt     { $$ = NODE2(ASSIGN, name, val) }
+		  | name:Call - '+' - '=' - val:Stmt  { $$ = NODE2(INC, name, val) }
+		  | name:Call - '-' - '=' - val:Stmt  { $$ = NODE2(DEC, name, val) }
           | name:CONST - ASSIGN - val:Stmt  { $$ = NODE2(SETCONST, name, val) }
           | name:IVAR - ASSIGN - val:Stmt   { $$ = NODE2(SETIVAR, name, val) }
           | name:CVAR - ASSIGN - val:Stmt   { $$ = NODE2(SETCVAR, name, val) }
