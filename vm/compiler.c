@@ -312,6 +312,15 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
       PUSH_OP_ABx(b, LOOKUP, reg, i); // procura "each" na lib
       PUSH_OP_ABC(b, CALL, reg, 0, blki);
     } break;
+	case NODE_LOGICAND:{
+		int jmp=0 ;
+		TrCompiler_compile_node(vm, c, b, (TrNode *)n->args[0], reg);
+		jmp = PUSH_OP_A(b, JMPUNLESS, reg);
+		TrCompiler_compile_node(vm, c, b, (TrNode *)n->args[1], reg+1);
+		if(jmp == 0)
+			jmp = PUSH_OP_A(b, JMPUNLESS, reg+1);
+		SETARG_sBx(kv_A(b->code, jmp), kv_size(b->code) - jmp - 1);
+	} break;
     case NODE_AND:
     case NODE_OR: {
       /* receiver */
@@ -453,7 +462,7 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
       }
     } break;
     default:
-      printf("Compiler: unknown node type: %d in %s:%lu\n", n->ntype, TR_STR_PTR(b->filename), b->line);
+      printf("Compiler: unknown node type: %d in %s:%lu\n", n->ntype, TR_STR_PTR(b->filename),(long unsigned int)b->line);
       if (vm->debug) assert(0);
   }
   return TR_NIL;

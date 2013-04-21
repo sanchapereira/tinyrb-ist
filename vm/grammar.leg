@@ -46,27 +46,28 @@ Stmts     = SEP*
 OptStmts  = Stmts
           | - SEP?                          { $$ = NODES_N(0) }
 
-Stmt      = While
-          | Until
-          | For
-          | If
-          | Unless
-          | Def
-          | Class
-          | Module
-          | Expr
+Stmt      =  LogicOp
+			| While
+			| Until
+			| For
+			| If
+			| Unless
+			| Def
+			| Class
+			| Module
+			| Expr
 
 Expr      = Assign
-          | AsgnCall
-          | UnaryOp
-          | BinOp
-          | SpecCall
-          | Call
-          | Range
-          | Yield
-          | Return
-          | Break
-          | Value
+			| AsgnCall
+			| UnaryOp
+			| BinOp
+			| SpecCall
+			| Call
+			| Range
+			| Yield
+			| Return
+			| Break
+			| Value
 
 Comment   = - '#' (!EOL .)*
 
@@ -102,6 +103,19 @@ BinOp     = ( rcv:SpecCall | rcv:Receiver )
             | '<' - arg:Expr                { $$ = NODE2(LT, rcv, arg) }
             | op:BINOP - arg:Expr           { $$ = NODE2(SEND, rcv, NODE2(MSG, op, NODES(NODE(ARG, arg)))) }
             ) 
+            
+LogicOp 	= ( 
+				rcv:UnaryOp 
+				| rcv:BinOp 
+				| rcv:SpecCall 
+				| rcv:Call	 	
+				| rcv:Range 
+				| rcv:Yield 
+				| rcv:Return	
+				| rcv:Break 
+				| rcv:Value
+				)
+				- 'and' - arg:Expr		{ $$ = NODE2(LOGICAND, rcv, arg) }
 
 UnaryOp   = '-' rcv:Expr                    { $$ = NODE(NEG, rcv) }
           | '!' rcv:Expr                    { $$ = NODE(NOT, rcv) }
@@ -129,13 +143,13 @@ Block     = 'do' SEP
           #| '{' - '|' params:Params '|'
           #  - body:OptStmts - '}'           { $$ = NODE2(BLOCK, body, params) }
 
-Assign    = name:ID - ASSIGN - val:Stmt     { $$ = NODE2(ASSIGN, name, val) }
-		  | name:Call - '+' - '=' - val:Stmt  { $$ = NODE2(INC, name, val) }
-		  | name:Call - '-' - '=' - val:Stmt  { $$ = NODE2(DEC, name, val) }
-          | name:CONST - ASSIGN - val:Stmt  { $$ = NODE2(SETCONST, name, val) }
-          | name:IVAR - ASSIGN - val:Stmt   { $$ = NODE2(SETIVAR, name, val) }
-          | name:CVAR - ASSIGN - val:Stmt   { $$ = NODE2(SETCVAR, name, val) }
-          | name:GLOBAL - ASSIGN - val:Stmt { $$ = NODE2(SETGLOBAL, name, val) }
+Assign    =  name:Call - '+' - '=' - val:Stmt  	{ $$ = NODE2(INC, name, val) }
+			| name:Call - '-' - '=' - val:Stmt  	{ $$ = NODE2(DEC, name, val) }
+			| name:ID - ASSIGN - val:Stmt     		{ $$ = NODE2(ASSIGN, name, val) }
+			| name:CONST - ASSIGN - val:Stmt  		{ $$ = NODE2(SETCONST, name, val) }
+			| name:IVAR - ASSIGN - val:Stmt   		{ $$ = NODE2(SETIVAR, name, val) }
+			| name:CVAR - ASSIGN - val:Stmt   		{ $$ = NODE2(SETCVAR, name, val) }
+			| name:GLOBAL - ASSIGN - val:Stmt 		{ $$ = NODE2(SETGLOBAL, name, val) }
 
 While     = 'while' SPACE cond:Expr SEP
               body:Stmts -
@@ -253,7 +267,8 @@ BINOP     = < ( '**' | '^'  | '&'  | '|'  | '~'  |
                 '<'  | '>'  | '<=' | '>='
               ) >                           { $$ = TrSymbol_new(yyvm, yytext) }
 UNOP      = < ( '-@' | '!' ) >              { $$ = TrSymbol_new(yyvm, yytext) }
-METHOD    = ID | UNOP | BINOP
+LOGICOP	  = < ('and' ) >					 { $$ = TrSymbol_new(yyvm, yytext) }
+METHOD    = ID | UNOP | BINOP | LOGICOP
 ASSIGN    = < '=' > &(!'=')                 { $$ = TrSymbol_new(yyvm, yytext) }
 IVAR      = < '@' NAME >                    { $$ = TrSymbol_new(yyvm, yytext) }
 CVAR      = < '@@' NAME >                   { $$ = TrSymbol_new(yyvm, yytext) }

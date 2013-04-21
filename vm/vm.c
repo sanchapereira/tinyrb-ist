@@ -368,7 +368,7 @@ OBJ TrVM_load(VM, char *filename) {
   if (!fp) tr_raise_errno(filename);
   
   char *string = TR_ALLOC_N(char, stats.st_size + 1);
-  if (fread(string, 1, stats.st_size, fp) == stats.st_size)
+  if (fread(string, 1, stats.st_size, fp) == (unsigned)stats.st_size)
     return TrVM_eval(vm, string, filename);
   
   tr_raise_errno(filename);

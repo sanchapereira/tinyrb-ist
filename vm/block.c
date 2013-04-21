@@ -24,9 +24,9 @@ static OBJ TrBlock_dump2(VM, TrBlock *b, int level) {
   char buf[10];
   
   size_t i;
-  printf("; block definition: %p (level %d)\n", b, level);
-  printf("; %lu registers ; %lu nested blocks\n", b->regc, kv_size(b->blocks));
-  printf("; %lu args ", b->argc);
+  printf("; block definition: %p (level %lu)\n", b, (long unsigned)level);
+  printf("; %lu registers ; %lu nested blocks\n", (long unsigned int)b->regc, (long unsigned int)kv_size(b->blocks));
+  printf("; %lu args ", (long unsigned int)b->argc);
   if (b->arg_splat) printf(", splat");
   printf("\n");
   if (kv_size(b->defaults) > 0) {
@@ -35,16 +35,16 @@ static OBJ TrBlock_dump2(VM, TrBlock *b, int level) {
     printf("\n");
   }
   for (i = 0; i < kv_size(b->locals); ++i)
-    printf(".local  %-8s ; %lu\n", INSPECT_K(kv_A(b->locals, i)), i);
+	  printf(".local  %-8s ; %lu\n", INSPECT_K(kv_A(b->locals, i)), (long unsigned int)i);
   for (i = 0; i < kv_size(b->upvals); ++i)
-    printf(".upval  %-8s ; %lu\n", INSPECT_K(kv_A(b->upvals, i)), i);
+	  printf(".upval  %-8s ; %lu\n", INSPECT_K(kv_A(b->upvals, i)), (long unsigned int)i);
   for (i = 0; i < kv_size(b->k); ++i)
-    printf(".value  %-8s ; %lu\n", INSPECT_K(kv_A(b->k, i)), i);
+	  printf(".value  %-8s ; %lu\n", INSPECT_K(kv_A(b->k, i)), (long unsigned int)i);
   for (i = 0; i < kv_size(b->strings); ++i)
-    printf(".string %-8s ; %lu\n", kv_A(b->strings, i), i);
+	  printf(".string %-8s ; %lu\n", kv_A(b->strings, i), (long unsigned int)i);
   for (i = 0; i < kv_size(b->code); ++i) {
     TrInst op = kv_A(b->code, i);
-    printf("[%03lu] %-10s %3d %3d %3d", i, opcode_names[GET_OPCODE(op)], GETARG_A(op), GETARG_B(op), GETARG_C(op));
+	printf("[%03lu] %-10s %3d %3d %3d", (long unsigned int)i, opcode_names[GET_OPCODE(op)], GETARG_A(op), GETARG_B(op), GETARG_C(op));
     switch (GET_OPCODE(op)) {
       case TR_OP_LOADK:    printf(" ; R[%d] = %s", GETARG_A(op), INSPECT_K(kv_A(b->k, GETARG_Bx(op)))); break;
       case TR_OP_STRING:   printf(" ; R[%d] = \"%s\"", GETARG_A(op), kv_A(b->strings, GETARG_Bx(op))); break;
