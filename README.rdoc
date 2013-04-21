@@ -6,6 +6,8 @@ http://github.com/macournoyer/tinyrb
 
 == what is implemented in tinyrb-ist (that isn't on tinyrb):
 * for
+* += / -=
+* and / or
 
 
 == credits
