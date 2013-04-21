@@ -42,6 +42,7 @@ typedef enum {
   NODE_IF,
   NODE_UNLESS,
   NODE_LOGICAND,
+  NODE_LOGICOR,
   NODE_AND,
   NODE_OR,
   NODE_WHILE,

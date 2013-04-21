@@ -316,9 +316,16 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
 		int jmp=0 ;
 		TrCompiler_compile_node(vm, c, b, (TrNode *)n->args[0], reg);
 		jmp = PUSH_OP_A(b, JMPUNLESS, reg);
-		TrCompiler_compile_node(vm, c, b, (TrNode *)n->args[1], reg+1);
+		TrCompiler_compile_node(vm, c, b, (TrNode *)n->args[1], reg);
 		if(jmp == 0)
 			jmp = PUSH_OP_A(b, JMPUNLESS, reg+1);
+		SETARG_sBx(kv_A(b->code, jmp), kv_size(b->code) - jmp - 1);
+	} break;
+	case NODE_LOGICOR:{
+		int jmp=0 ;
+		TrCompiler_compile_node(vm, c, b, (TrNode *)n->args[0], reg);
+		jmp = PUSH_OP_A(b, JMPIF, reg);
+		TrCompiler_compile_node(vm, c, b, (TrNode *)n->args[1], reg);
 		SETARG_sBx(kv_A(b->code, jmp), kv_size(b->code) - jmp - 1);
 	} break;
     case NODE_AND:

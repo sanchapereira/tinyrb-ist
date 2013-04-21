@@ -115,7 +115,11 @@ LogicOp 	= (
 				| rcv:Break 
 				| rcv:Value
 				)
-				- 'and' - arg:Expr		{ $$ = NODE2(LOGICAND, rcv, arg) }
+				- 
+				( 'and' - arg:Expr		{ $$ = NODE2(LOGICAND, rcv, arg) }
+				| 'or' - arg:Expr		{ $$ = NODE2(LOGICOR, rcv, arg) }
+				)
+				
 
 UnaryOp   = '-' rcv:Expr                    { $$ = NODE(NEG, rcv) }
           | '!' rcv:Expr                    { $$ = NODE(NOT, rcv) }
@@ -267,7 +271,7 @@ BINOP     = < ( '**' | '^'  | '&'  | '|'  | '~'  |
                 '<'  | '>'  | '<=' | '>='
               ) >                           { $$ = TrSymbol_new(yyvm, yytext) }
 UNOP      = < ( '-@' | '!' ) >              { $$ = TrSymbol_new(yyvm, yytext) }
-LOGICOP	  = < ('and' ) >					 { $$ = TrSymbol_new(yyvm, yytext) }
+LOGICOP	  = < ('and' | 'or') >					 { $$ = TrSymbol_new(yyvm, yytext) }
 METHOD    = ID | UNOP | BINOP | LOGICOP
 ASSIGN    = < '=' > &(!'=')                 { $$ = TrSymbol_new(yyvm, yytext) }
 IVAR      = < '@' NAME >                    { $$ = TrSymbol_new(yyvm, yytext) }
