@@ -448,16 +448,19 @@ OBJ TrCompiler_compile_node(VM, TrCompiler *c, TrBlock *b, TrNode *n, int reg) {
     } break;
 	case NODE_INC: 
 	case NODE_DEC:{
-	  int id=0, val=0;
+	  /*int id=0, val=0;
 	  COMPILE_NODE(b, n->args[0], id);	 // n->args[0]
-	  val = TrCompiler_compile_node_to_RK(vm, c, b, CNODE(NODE_ARG(n, 1)), reg+1); // n->args[1]
-	  
- 	  switch(n->ntype) {
-		case NODE_INC: PUSH_OP_ABC(b, ADD, reg,id, val); break;
-		case NODE_DEC: PUSH_OP_ABC(b, SUB, reg,id, val); break;
-		default: assert(0);
+	  val = TrCompiler_compile_node_to_RK(vm, c, b, CNODE(NODE_ARG(n, 1)), reg+1); // n->args[1]; */
+	  OBJ name = n->args[0];
+	  COMPILE_NODE(b, n->args[1], reg);
+	  int i = TrBlock_push_local(b, name);
+	  int val = TrCompiler_compile_node_to_RK(vm, c, b, CNODE(NODE_ARG(n, 1)), reg);
+	  switch(n->ntype) {
+	    case NODE_INC: PUSH_OP_ABC(b, ADD, reg, i, val); break;
+	    case NODE_DEC: PUSH_OP_ABC(b, SUB, reg, i, val); break;
+	    default: assert(0);
 	  }
-	  PUSH_OP_AB(b, MOVE, id, reg);
+	  PUSH_OP_AB(b, MOVE, i, reg);
 	} break;
     case NODE_NEG:
     case NODE_NOT: {

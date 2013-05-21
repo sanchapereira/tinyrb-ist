@@ -7,7 +7,7 @@ end
 
 test2 = false or true
 
-if test2 
+if !test2 
 	puts "Test-2 succeeded!"
 end
 
